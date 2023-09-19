@@ -6,12 +6,27 @@ public class PlayerMovement : MonoBehaviour
     private int laneIndex = 1;  // 0 = left, 1 = middle, 2 = right
     private Vector3[] lanes;
 
+    private float transitionSpeed = 7f; // Adjust this value as needed for faster/slower transitions
+    private Vector3 targetPosition;
+
+
+    public Transform lane1, lane2, lane3;
+
     private void Start()
     {
         lanes = new Vector3[3];
-        lanes[0] = new Vector3(-1, 0, 0);  // left
-        lanes[1] = new Vector3(0, 0, 0);   // middle
-        lanes[2] = new Vector3(1, 0, 0);   // right
+        //lanes[0] = new Vector3(-1, 0, 0);  // left
+        //lanes[1] = new Vector3(0, 0, 0);   // middle
+        //lanes[2] = new Vector3(1, 0, 0);   // right
+
+        lanes[0] = new Vector3(lane1.position.x, 0.5f, -7);  // corresponds to Lane1
+        lanes[1] = new Vector3(lane2.position.x, 0.5f, -7);  // corresponds to Lane2
+        lanes[2] = new Vector3(lane3.position.x, 0.5f, -7);  // corresponds to Lane3
+
+
+
+        targetPosition = lanes[laneIndex];
+        transform.position = targetPosition;
     }
 
     private void Update()
@@ -26,10 +41,11 @@ public class PlayerMovement : MonoBehaviour
             laneIndex++;
             MoveToLane();
         }
+        transform.position = Vector3.Lerp(transform.position, targetPosition, transitionSpeed * Time.deltaTime);
     }
 
     private void MoveToLane()
     {
-        transform.position = lanes[laneIndex];
+        targetPosition = lanes[laneIndex];
     }
 }
