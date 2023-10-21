@@ -17,7 +17,7 @@ public class ScrollTexture : MonoBehaviour
 
     void Update()
     {
-        float y = Mathf.Repeat(-Time.time * scrollSpeed, 1);
+        float y = Mathf.Repeat(-Time.time * 0.2f, 1);
         Vector2 offset = new Vector2(savedOffset.x, savedOffset.y + y);
         rend.sharedMaterial.SetTextureOffset("_MainTex", offset);
     }
