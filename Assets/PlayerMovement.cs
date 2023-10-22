@@ -12,6 +12,12 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform lane1, lane2, lane3;
 
+
+
+    public float jumpForce = 7f; // The force of the jump, adjustable in the inspector
+    private bool isJumping = false; // Flag to check if the player is already jumping
+    private Rigidbody playerRigidbody; // Reference to the player's rigidbody
+
     private void Start()
     {
         lanes = new Vector3[3];
@@ -27,6 +33,9 @@ public class PlayerMovement : MonoBehaviour
 
         targetPosition = lanes[laneIndex];
         transform.position = targetPosition;
+
+
+        playerRigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -42,10 +51,34 @@ public class PlayerMovement : MonoBehaviour
             MoveToLane();
         }
         transform.position = Vector3.Lerp(transform.position, targetPosition, transitionSpeed * Time.deltaTime);
+
+        if (Input.GetButtonDown("Jump") && !isJumping)
+        {
+            Debug.Log("Jump initiated");  // Log to confirm it's not called repeatedly
+            isJumping = true;
+            Jump();
+        }
     }
 
     private void MoveToLane()
     {
         targetPosition = lanes[laneIndex];
     }
+
+    void Jump()
+    {
+        Debug.Log("Applying jump force");  // Confirm this only happens once per jump
+        playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Check if the collision is with the ground (consider using tags or layers for more precision)
+        if (collision.gameObject.CompareTag("Ground")) // Assumes your ground GameObject has the tag "Ground"
+        {
+            isJumping = false;
+        }
+    }
+
+
 }

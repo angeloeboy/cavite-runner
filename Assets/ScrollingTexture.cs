@@ -27,3 +27,4 @@ public class ScrollTexture : MonoBehaviour
         rend.material.SetTextureOffset("_MainTex", savedOffset);
     }
 }
+

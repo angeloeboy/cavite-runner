@@ -2,37 +2,57 @@ using UnityEngine;
 
 public class ObstacleMovement : MonoBehaviour
 {
-    //public float speed = 2.0f;  // Starting speed of the obstacle.
-    public float speed = GameSettings.BaseSpeed;  // Starting speed of the obstacle.
-    public float speedIncreaseOverTime = 0.05f; // Amount by which speed will increase.
-    public float maxSpeed = 5f; // Maximum speed the obstacle can reach.
-    
+    public float speedIncreaseOverTime = 0.05f;
+    public float maxSpeed = 5f;
     private ScoreManager scoreManager;
     private bool scoreAdded = false;
+
+    // For playing sound
+    public AudioClip scoreSound;  // Assign your AudioClip in the inspector
+    private AudioSource audioSource;  // AudioSource component reference
 
     private void Start()
     {
         scoreManager = FindObjectOfType<ScoreManager>();
+
+        // Initialize AudioSource component
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)  // If AudioSource is missing
+        {
+            Debug.LogError("No AudioSource found on this GameObject. Adding one.");
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     private void Update()
     {
-        // Move the obstacle along the negative Z-axis.
+        // Move the obstacle along the negative Z-axis
         transform.Translate(Vector3.back * GameSettings.BaseSpeed * Time.deltaTime);
 
+        // Scoring condition
         if (transform.position.z <= -7 && !scoreAdded)
         {
             scoreManager.IncreaseScore(1);
-            scoreAdded = true; // Set the flag to true so the score isn't added again for this obstacle.
+            scoreAdded = true;
+            
+            // Play the sound
+            if (scoreSound != null)
+            {
+                audioSource.PlayOneShot(scoreSound);
+            }
+            else
+            {
+                Debug.LogError("No scoreSound AudioClip assigned. Please assign it in the inspector.");
+            }
         }
 
+        // Destruction condition
         if (transform.position.z <= -12)
         {
             Destroy(gameObject);
         }
 
-
-        // Increase the speed of the obstacle over time but limit it to maxSpeed.
+        // Speed increase logic
         GameSettings.BaseSpeed += speedIncreaseOverTime * Time.deltaTime;
         GameSettings.BaseSpeed = Mathf.Clamp(GameSettings.BaseSpeed, 2.0f, maxSpeed);
     }

@@ -3,7 +3,9 @@ guid: 12fc85bdeb56b474dbec2b631c4b39f0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - obstaclePrefab: {fileID: 5109631007500483802, guid: 6a9eee769b9d9154b80dd4e6a240d1ad, type: 3}
+  - plane: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
